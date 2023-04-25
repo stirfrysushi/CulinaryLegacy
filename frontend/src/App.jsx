@@ -14,10 +14,10 @@ function App() {
         </a>
       </div>
       <h1>Welcome to CulinaryLegacy ٩(◕‿◕｡)۶</h1>
-
       <div className="card">
-        <button onClick={() => hrefFunction()}>
-          Login Here
+        {/* should probably wire this better */}
+        <button onClick={event =>  window.location.href='/login'}>
+         Login Here!
         </button>
       </div>
     </>

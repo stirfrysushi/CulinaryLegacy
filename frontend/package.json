@@ -36,7 +36,8 @@
         "url": "https://github.com/StartBootstrap/startbootstrap-shop-homepage.git"
     },
     "dependencies": {
-        "bootstrap": "5.2.3"
+        "bootstrap": "5.2.3",
+        "nodemon": "^2.0.22"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",

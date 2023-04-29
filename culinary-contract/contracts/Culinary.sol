@@ -40,18 +40,22 @@ contract CulinaryLegacyRecipe{
     function unregister(uint userID) //Do we need this?
 
     //Create new recipe for sale
+    //TODO: allow one user to create multiple recipe 
+    //-> suggest: update recipeCreator to map address to list of Recipe
     function addRecipe(uint price) onlyRegisteredUser public {
         Recipe recipe = Recipe(index, price)
         index.increment()
         recipeCreator[msg.sender] = recipe
     }
-    
+    //TODO: consider checking ASK example
     function request(uint recipeID) {
+
     }
+    ////TODO: consider checking ASK example
     function response(uint recipeID) onlyRecipeOwner
-    function view(uint recipeID)
-    function sell(uint recipeID)
-    function buy(uint recipeID)
+    function view(uint recipeID)//what is the purpose of view?
+    function sell(uint recipeID)//do we need this as sell action considered to be a response?
+    function buy(uint recipeID)//do we need this as buy action considered to be a request?
     function terminateContract () onlyContractOwner{
         selfdestruct(contract_owner);
     }

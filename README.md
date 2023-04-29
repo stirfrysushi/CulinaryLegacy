@@ -20,3 +20,6 @@ To start application:
 - npm install
 - npm start 
 - navigate to http://localhost:3000 
+
+
+***** remember to change localhost in truffle into 127.0.0.1

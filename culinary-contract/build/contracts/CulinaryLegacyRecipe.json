@@ -1,0 +1,383 @@
+{
+  "contractName": "CulinaryLegacyRecipe",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Culinary.sol\":\"CulinaryLegacyRecipe\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Culinary.sol\":{\"keccak256\":\"0x4b7f4d5657d0270f8fb16b954ee2f36edfc6416efe0833c8f0c88fad7cc6ca23\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://03e86b3adc7b705e4f422fd14e0a70f9fd7d28a7bcdcda35299659e374676ffc\",\"dweb:/ipfs/QmWLSDE7Yr1weRopenELFsGhd3JzKnru4RZwJ8fpG8vChs\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220eb45d3281cba2de15d513895f8e97e5f47c1bd5d5679a8357bb5b90dcfc3c9ac64736f6c63430008130033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220eb45d3281cba2de15d513895f8e97e5f47c1bd5d5679a8357bb5b90dcfc3c9ac64736f6c63430008130033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "57:345:0:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "57:345:0:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.9;\n\ncontract CulinaryLegacyRecipe {\n\n    // structs definition + data \n    struct Recipe {\n        uint recipeID; \n        uint price; \n    }\n    struct User {\n        uint userID; \n        bool registered; \n    }\n    uint index; \n    mapping(uint => User) owners; \n    mapping(address => User) registeredUser; \n    address contract_owner; \n\n    \n\n}",
+  "sourcePath": "/Users/Pan2k17/Desktop/426Block/project/CulinaryLegacy/culinary-contract/contracts/Culinary.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Culinary.sol",
+    "exportedSymbols": {
+      "CulinaryLegacyRecipe": [
+        26
+      ]
+    },
+    "id": 27,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:0"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "CulinaryLegacyRecipe",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 26,
+        "linearizedBaseContracts": [
+          26
+        ],
+        "name": "CulinaryLegacyRecipe",
+        "nameLocation": "66:20:0",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "CulinaryLegacyRecipe.Recipe",
+            "id": 6,
+            "members": [
+              {
+                "constant": false,
+                "id": 3,
+                "mutability": "mutable",
+                "name": "recipeID",
+                "nameLocation": "157:8:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 6,
+                "src": "152:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "152:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5,
+                "mutability": "mutable",
+                "name": "price",
+                "nameLocation": "181:5:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 6,
+                "src": "176:10:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 4,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "176:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Recipe",
+            "nameLocation": "135:6:0",
+            "nodeType": "StructDefinition",
+            "scope": 26,
+            "src": "128:66:0",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "CulinaryLegacyRecipe.User",
+            "id": 11,
+            "members": [
+              {
+                "constant": false,
+                "id": 8,
+                "mutability": "mutable",
+                "name": "userID",
+                "nameLocation": "226:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 11,
+                "src": "221:11:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 7,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "221:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 10,
+                "mutability": "mutable",
+                "name": "registered",
+                "nameLocation": "248:10:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 11,
+                "src": "243:15:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 9,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "243:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "User",
+            "nameLocation": "206:4:0",
+            "nodeType": "StructDefinition",
+            "scope": 26,
+            "src": "199:67:0",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 13,
+            "mutability": "mutable",
+            "name": "index",
+            "nameLocation": "276:5:0",
+            "nodeType": "VariableDeclaration",
+            "scope": 26,
+            "src": "271:10:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 12,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "271:4:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 18,
+            "mutability": "mutable",
+            "name": "owners",
+            "nameLocation": "310:6:0",
+            "nodeType": "VariableDeclaration",
+            "scope": 26,
+            "src": "288:28:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_User_$11_storage_$",
+              "typeString": "mapping(uint256 => struct CulinaryLegacyRecipe.User)"
+            },
+            "typeName": {
+              "id": 17,
+              "keyName": "",
+              "keyNameLocation": "-1:-1:-1",
+              "keyType": {
+                "id": 14,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "296:4:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "288:21:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_User_$11_storage_$",
+                "typeString": "mapping(uint256 => struct CulinaryLegacyRecipe.User)"
+              },
+              "valueName": "",
+              "valueNameLocation": "-1:-1:-1",
+              "valueType": {
+                "id": 16,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 15,
+                  "name": "User",
+                  "nameLocations": [
+                    "304:4:0"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 11,
+                  "src": "304:4:0"
+                },
+                "referencedDeclaration": 11,
+                "src": "304:4:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_User_$11_storage_ptr",
+                  "typeString": "struct CulinaryLegacyRecipe.User"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 23,
+            "mutability": "mutable",
+            "name": "registeredUser",
+            "nameLocation": "348:14:0",
+            "nodeType": "VariableDeclaration",
+            "scope": 26,
+            "src": "323:39:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_User_$11_storage_$",
+              "typeString": "mapping(address => struct CulinaryLegacyRecipe.User)"
+            },
+            "typeName": {
+              "id": 22,
+              "keyName": "",
+              "keyNameLocation": "-1:-1:-1",
+              "keyType": {
+                "id": 19,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "331:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "323:24:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_User_$11_storage_$",
+                "typeString": "mapping(address => struct CulinaryLegacyRecipe.User)"
+              },
+              "valueName": "",
+              "valueNameLocation": "-1:-1:-1",
+              "valueType": {
+                "id": 21,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 20,
+                  "name": "User",
+                  "nameLocations": [
+                    "342:4:0"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 11,
+                  "src": "342:4:0"
+                },
+                "referencedDeclaration": 11,
+                "src": "342:4:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_User_$11_storage_ptr",
+                  "typeString": "struct CulinaryLegacyRecipe.User"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 25,
+            "mutability": "mutable",
+            "name": "contract_owner",
+            "nameLocation": "377:14:0",
+            "nodeType": "VariableDeclaration",
+            "scope": 26,
+            "src": "369:22:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 24,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "369:7:0",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "scope": 27,
+        "src": "57:345:0",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:370:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.19+commit.7dd6d404.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2023-04-29T04:12:16.051Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

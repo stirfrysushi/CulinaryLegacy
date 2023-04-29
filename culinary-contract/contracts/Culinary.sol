@@ -7,19 +7,19 @@ contract CulinaryLegacyRecipe{
         uint recipeID; 
         uint price;
     }
-    struct User {
-        uint[] recipeOwned //recipe owned by this user
-        bool registered;
-    }
 
     uint index; //increment id for recipe
-    //mapping(Recipe => address) owners;//TODO: must be elementary type name for mapping
     address contract_owner;
-    mapping(address => User) registeredUser //keeping track registered user
-    mapping(address => Recipe) recipeCreator //keeping track of the creator of the recipe
+    mapping(address => bool) registeredUser; //keeping track registered user
+    mapping(uint => Recipe) recipeMap; // id -> recipe object
+    mapping(uint => address) recipeCreator; //recipeId -> creator // different recipeId shares the same creator
+    mapping(uint => address[]) recipeOwner; //recipeId -> owners
 
     //#########Event and Modifier##############
-    event recipeRequestCompleted(...)
+    constructor() public{
+        contract_owner = msg.sender;
+    }
+    event recipeRequestCompleted();
     modifier onlyContractOwner(){
         require(msg.sender == contract_owner);
         _;
@@ -35,31 +35,29 @@ contract CulinaryLegacyRecipe{
     //#########Functions###############
     function register() public {
         address user = msg.sender;
-        registeredUser[user].registered = true;
+        registeredUser[user] = true;
     }
-    function unregister(uint userID) //Do we need this?
+    function unregister(uint userID) public {} //Do we need this?
 
     //Create new recipe for sale
-    //TODO: allow one user to create multiple recipe 
-    //-> suggest: update recipeCreator to map address to list of Recipe
-    function addRecipe(uint price) onlyRegisteredUser public {
-        Recipe recipe = Recipe(index, price)
-        index.increment()
-        recipeCreator[msg.sender] = recipe
+    function addRecipe(uint price) public onlyRegisteredUser{
+        Recipe recipe = Recipe(index, price);
+        recipeCreator[index] = msg.sender;
+        index.increment();
     }
     //TODO: consider checking ASK example
-    function request(uint recipeID) {
+    function request(uint recipeID) public{
 
     }
     ////TODO: consider checking ASK example
-    function response(uint recipeID) onlyRecipeOwner
-    function view(uint recipeID)//what is the purpose of view?
-    function sell(uint recipeID)//do we need this as sell action considered to be a response?
-    function buy(uint recipeID)//do we need this as buy action considered to be a request?
-    function terminateContract () onlyContractOwner{
+    function response(uint recipeID) onlyRecipeOwner public{}
+    function viewAll(uint recipeID) public {} //what is the purpose of view?
+    function sell(uint recipeID) public{}//do we need this as sell action considered to be a response?
+    function buy(uint recipeID) public{}//do we need this as buy action considered to be a request?
+    function terminateContract () onlyContractOwner public{
         selfdestruct(contract_owner);
     }
-    function unregisterMember(uint userID) onlyContractOwner
+    function unregisterMember(uint userID) onlyContractOwne public{}
 
 
 }

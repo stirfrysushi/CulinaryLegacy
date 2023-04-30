@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 contract CulinaryLegacyRecipe{
     //##############Data Structure#####################
@@ -7,7 +8,7 @@ contract CulinaryLegacyRecipe{
     }
 
     uint index; //increment id for recipe
-    address contract_owner;
+    address payable contract_owner;
     mapping(address => uint) registeredUser; //keeping track registered user
     mapping(uint => Recipe) recipeMap; // recipeId -> recipe object
     mapping(uint => address) recipeCreator; //recipeId -> creator // different recipeId shares the same creator
@@ -17,7 +18,11 @@ contract CulinaryLegacyRecipe{
     constructor() public{
         contract_owner = msg.sender;
     }
-    event recipeRequestCompleted();
+
+    event recipeRequestCompleted(address indexed seller, address indexed buyer, uint recipeID); 
+    event recipeRequestDenied(address indexed seller, address indexed buyer, uint recipeID); 
+    event recipeRequest(address indexed seller, address indexed buyer, uint recipeID); 
+
     modifier onlyContractOwner(){
         require(msg.sender == contract_owner);
         _;
@@ -30,6 +35,7 @@ contract CulinaryLegacyRecipe{
         require(registeredUser[msg.sender] == 1);
         _;
     }
+
     //#########Functions###############
     function register() public {
         address user = msg.sender;
@@ -49,28 +55,44 @@ contract CulinaryLegacyRecipe{
         index++;
     }
     //TODO: consider checking ASK example
-    function request(uint recipeID, address seller) onlyRegisteredUser payable public{
-        recipeOwner[recipeID].push(msg.sender);
-        address payable _addr = payable(seller);
-        _addr.transfer(msg.value);
+    function request(uint recipeID, address buyer, address payable seller) onlyRegisteredUser payable public{
+        // recipeOwner[recipeID].push(msg.sender);
+        // address payable _addr = payable(seller);
+        seller.transfer(msg.value);
+        emit recipeRequest(buyer, seller, recipeID);
     }
+
     ////TODO: consider checking ASK example
-    //function response(uint recipeID) onlyRecipeOwner public{}
+    function response(address fromSeller, address toBuyer, uint recipeID) public{
+        // if buyer not registered -> revert + announce cancellation 
+        if (registeredUser[toBuyer] != 1) {
+            revert(); 
+            emit recipeRequestDenied(fromSeller, toBuyer, recipeID);
+        } 
+        // if seller does not own recipe -> cancel (for some reason the onlyRecipeOwner is triggering the compiler??)
+        if (recipeCreator[recipeID] != fromSeller) {
+            revert(); 
+            emit recipeRequestDenied(fromSeller, toBuyer, recipeID);
+        }
+        // else -> announce completion + transfer ownership 
+        recipeOwner[recipeID].push(msg.sender); 
+        emit recipeRequestCompleted(fromSeller,toBuyer,recipeID);
+    }
     
     //for testing purpose
     function viewAllOwnersOfThisRecipe(uint recipeID) public view returns (address[] memory) {
         return recipeOwner[recipeID];
     }
+
     //function sell(uint recipeID) public{}//do we need this as sell action considered to be a response?
     //function buy(uint recipeID) public{}//do we need this as buy action considered to be a request?
+
     function terminateContract () onlyContractOwner public{
-        selfdestruct(msg.sender);
+        selfdestruct(contract_owner);
     }
 
     function unregisterMember(address userID) onlyContractOwner public{
-        // check if user is registered
         require(registeredUser[userID] == 0, "User not registered"); 
-        // set user to be 0 -- unregistered now 
         registeredUser[userID] = 0;
     }
 

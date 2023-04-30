@@ -1,6 +1,4 @@
-//https://ethereum.stackexchange.com/questions/9142/how-to-convert-a-string-to-bytes32
-//https://ethereum.stackexchange.com/questions/2519/how-to-convert-a-bytes32-to-string
-pragma solidity >=0.4.0 <0.6.0;
+pragma solidity >=0.4.22 <0.9.0;
 contract CulinaryLegacyRecipe{
     //##############Data Structure#####################
 	struct Recipe {
@@ -10,8 +8,8 @@ contract CulinaryLegacyRecipe{
 
     uint index; //increment id for recipe
     address contract_owner;
-    mapping(address => bool) registeredUser; //keeping track registered user
-    mapping(uint => Recipe) recipeMap; // id -> recipe object
+    mapping(address => uint) registeredUser; //keeping track registered user
+    mapping(uint => Recipe) recipeMap; // recipeId -> recipe object
     mapping(uint => address) recipeCreator; //recipeId -> creator // different recipeId shares the same creator
     mapping(uint => address[]) recipeOwner; //recipeId -> owners
 
@@ -29,35 +27,46 @@ contract CulinaryLegacyRecipe{
         _;
     }
     modifier onlyRegisteredUser(){
-        require(registeredUser[msg.sender].registered);
+        require(registeredUser[msg.sender] == 1);
         _;
     }
     //#########Functions###############
     function register() public {
         address user = msg.sender;
-        registeredUser[user] = true;
+        registeredUser[user] = 1;
     }
-    function unregister(uint userID) public {} //Do we need this?
-
+    //self-unregister onself from the contract
+    function selfUnregister() public onlyRegisteredUser{
+        if (msg.sender != contract_owner){
+            registeredUser[msg.sender] = 0;
+        }
+    }
     //Create new recipe for sale
     function addRecipe(uint price) public onlyRegisteredUser{
-        Recipe recipe = Recipe(index, price);
+        recipeMap[index] = Recipe(index, price);
         recipeCreator[index] = msg.sender;
-        index.increment();
+        recipeOwner[index].push(msg.sender);
+        index++;
     }
     //TODO: consider checking ASK example
-    function request(uint recipeID) public{
-
+    function request(uint recipeID, address seller) onlyRegisteredUser payable public{
+        recipeOwner[recipeID].push(msg.sender);
+        address payable _addr = payable(seller);
+        _addr.transfer(msg.value);
     }
     ////TODO: consider checking ASK example
-    function response(uint recipeID) onlyRecipeOwner public{}
-    function viewAll(uint recipeID) public {} //what is the purpose of view?
-    function sell(uint recipeID) public{}//do we need this as sell action considered to be a response?
-    function buy(uint recipeID) public{}//do we need this as buy action considered to be a request?
-    function terminateContract () onlyContractOwner public{
-        selfdestruct(contract_owner);
+    //function response(uint recipeID) onlyRecipeOwner public{}
+    
+    //for testing purpose
+    function viewAllOwnersOfThisRecipe(uint recipeID) public view returns (address[] memory) {
+        return recipeOwner[recipeID];
     }
-    function unregisterMember(uint userID) onlyContractOwne public{}
+    //function sell(uint recipeID) public{}//do we need this as sell action considered to be a response?
+    //function buy(uint recipeID) public{}//do we need this as buy action considered to be a request?
+    function terminateContract () onlyContractOwner public{
+        selfdestruct(msg.sender);
+    }
+    //function unregisterMember(uint userID) onlyContractOwner public{}
 
 
 }

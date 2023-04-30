@@ -66,7 +66,12 @@ contract CulinaryLegacyRecipe{
     function terminateContract () onlyContractOwner public{
         selfdestruct(msg.sender);
     }
-    //function unregisterMember(uint userID) onlyContractOwner public{}
 
+    function unregisterMember(address userID) onlyContractOwner public{
+        // check if user is registered
+        require(registeredUser[userID] == 0, "User not registered"); 
+        // set user to be 0 -- unregistered now 
+        registeredUser[userID] = 0;
+    }
 
 }

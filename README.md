@@ -13,7 +13,6 @@ To deploy to Ganache:
 - cd culinary-contract
 - npm install
 - truffle migrate --reset 
-- get contract address (?)
 
 To start application:
 - cd culinary-app
@@ -21,5 +20,3 @@ To start application:
 - npm start 
 - navigate to http://localhost:3000 
 
-
-***** remember to change localhost in truffle into 127.0.0.1

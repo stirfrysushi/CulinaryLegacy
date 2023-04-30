@@ -1,14 +1,16 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.4.22 <0.9.0;
 import "./helper_contracts/ERC721.sol";
+
 contract CulinaryLegacyRecipe is ERC721{
     //##############Data Structure#####################
 	struct Recipe {
         uint256 recipeID; 
         uint256 price;
     }
+
     uint256 recipeCount; //increment id for recipe
-    address payable contract_owner;
+    address public contract_owner;
     mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
     mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
     mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
@@ -37,6 +39,7 @@ contract CulinaryLegacyRecipe is ERC721{
     constructor() public{
         contract_owner = msg.sender;
     }
+
     function register() public {
         registeredUser[msg.sender] = 1;
     }
@@ -51,6 +54,7 @@ contract CulinaryLegacyRecipe is ERC721{
             registeredUser[msg.sender] = 0;
         }
     }
+    
     //Create new recipe for sale
     function addRecipe(uint price) public onlyRegisteredUser{
         recipeMap[recipeCount] = Recipe(recipeCount, price);
@@ -70,13 +74,13 @@ contract CulinaryLegacyRecipe is ERC721{
     function response(address fromSeller, address toBuyer, uint recipeID) public{
         // if buyer not registered -> revert + announce cancellation 
         if (registeredUser[toBuyer] != 1) {
-            revert(); 
             emit recipeRequestDenied(fromSeller, toBuyer, recipeID);
+            revert(); 
         } 
         // if seller does not own recipe -> cancel (for some reason the onlyRecipeOwner is triggering the compiler??)
         if (recipeOwner[recipeID] != fromSeller) {
-            revert(); 
             emit recipeRequestDenied(fromSeller, toBuyer, recipeID);
+            revert(); 
         }
         // else -> announce completion + transfer ownership 
         recipeOwner[recipeID] = msg.sender; 
@@ -84,7 +88,7 @@ contract CulinaryLegacyRecipe is ERC721{
     }
 
     function terminateContract () onlyContractOwner public{
-        selfdestruct(contract_owner);
+        selfdestruct(msg.sender);
     }
 
     //for testing purpose

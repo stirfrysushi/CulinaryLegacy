@@ -54,7 +54,6 @@ contract CulinaryLegacyRecipe is ERC721{
     //Create new recipe for sale
     function addRecipe(uint price) public onlyRegisteredUser{
         recipeMap[recipeCount] = Recipe(recipeCount, price);
-        recipeOwner[recipeCount] = msg.sender;
         mint(msg.sender,recipeCount);
         recipeCount = recipeCount+1;
     }
@@ -97,9 +96,12 @@ contract CulinaryLegacyRecipe is ERC721{
 
     //########Functions used by other functions##################
     function mint(address to, uint256 recipeId) internal {
-        //require(to != address(0), "ZeroAddressMiniting");
-        require(recipeId < recipeCount, "AlreadyMinted");
+        require(to != address(0), "ZeroAddressMiniting");
+        require(!exists(recipeId), "AlreadyMinted");
         recipeOwner[recipeId] = to;
         //emit Transfer(address(0), to, assetId);
+    }
+    function exists(uint256 recipeId) internal view returns (bool) {
+        return recipeOwner[recipeId] != address(0);
     }
 }

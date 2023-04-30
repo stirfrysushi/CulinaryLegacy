@@ -1,29 +1,27 @@
 pragma solidity >=0.4.22 <0.9.0;
-contract CulinaryLegacyRecipe{
+import "./helper_contracts/ERC721.sol";
+contract CulinaryLegacyRecipe is ERC721{
     //##############Data Structure#####################
 	struct Recipe {
-        uint recipeID; 
-        uint price;
+        uint256 recipeID; 
+        uint256 price;
     }
 
-    uint index; //increment id for recipe
+    uint256 recipeCount; //increment id for recipe
     address contract_owner;
-    mapping(address => uint) registeredUser; //keeping track registered user
-    mapping(uint => Recipe) recipeMap; // recipeId -> recipe object
-    mapping(uint => address) recipeCreator; //recipeId -> creator // different recipeId shares the same creator
-    mapping(uint => address[]) recipeOwner; //recipeId -> owners
-
+    mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
+    mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
+    mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
     //#########Event and Modifier##############
-    constructor() public{
-        contract_owner = msg.sender;
-    }
+    //Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
     event recipeRequestCompleted();
     modifier onlyContractOwner(){
         require(msg.sender == contract_owner);
         _;
     }
     modifier onlyRecipeOwner(uint recipdeId){
-        require(msg.sender == recipeCreator[recipdeId]);
+        require(msg.sender == recipeOwner[recipdeId]);
         _;
     }
     modifier onlyRegisteredUser(){
@@ -31,9 +29,11 @@ contract CulinaryLegacyRecipe{
         _;
     }
     //#########Functions###############
+    constructor() public{
+        contract_owner = msg.sender;
+    }
     function register() public {
-        address user = msg.sender;
-        registeredUser[user] = 1;
+        registeredUser[msg.sender] = 1;
     }
     //self-unregister onself from the contract
     function selfUnregister() public onlyRegisteredUser{
@@ -43,30 +43,34 @@ contract CulinaryLegacyRecipe{
     }
     //Create new recipe for sale
     function addRecipe(uint price) public onlyRegisteredUser{
-        recipeMap[index] = Recipe(index, price);
-        recipeCreator[index] = msg.sender;
-        recipeOwner[index].push(msg.sender);
-        index++;
+        recipeMap[recipeCount] = Recipe(recipeCount, price);
+        recipeOwner[recipeCount] = msg.sender;
+        mint(msg.sender,recipeCount);
+        recipeCount = recipeCount+1;
     }
     //TODO: consider checking ASK example
-    function request(uint recipeID, address seller) onlyRegisteredUser payable public{
-        recipeOwner[recipeID].push(msg.sender);
+    function request(uint recipeId, address seller) onlyRegisteredUser payable public{
+        require(recipeOwner[recipeId] == seller, "NotTheRecipeOwner");
+        recipeOwner[recipeId]=msg.sender;
         address payable _addr = payable(seller);
-        _addr.transfer(msg.value);
+        _addr.transfer(recipeMap[recipdeId].price);
+        emit Transfer(from, msg.sender, recipeId);
     }
-    ////TODO: consider checking ASK example
-    //function response(uint recipeID) onlyRecipeOwner public{}
     
     //for testing purpose
-    function viewAllOwnersOfThisRecipe(uint recipeID) public view returns (address[] memory) {
-        return recipeOwner[recipeID];
+    function ownerOf(uint256 recipeId) onlyRecipeOwner public view returns (address) {
+        address owner = recipeOwner[recipeId];
+        return owner;
     }
-    //function sell(uint recipeID) public{}//do we need this as sell action considered to be a response?
-    //function buy(uint recipeID) public{}//do we need this as buy action considered to be a request?
     function terminateContract () onlyContractOwner public{
         selfdestruct(msg.sender);
     }
-    //function unregisterMember(uint userID) onlyContractOwner public{}
-
-
+    //########Functions used by other functions##################
+    function mint(address to, uint256 recipeId) internal {
+        //require(to != address(0), "ZeroAddressMiniting");
+        require(!exists(assetId), "AlreadyMinted");
+        recipeOwner[recipeId] = to;
+        ownedAssetsCount[to]++;
+        emit Transfer(address(0), to, assetId);
+    }
 }

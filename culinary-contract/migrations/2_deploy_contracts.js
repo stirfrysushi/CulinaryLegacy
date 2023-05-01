@@ -1,5 +1,5 @@
-const RES4 = artifacts.require("RES4");
+const culinary = artifacts.require("CulinaryLegacyRecipe");
 
 module.exports = function(deployer) {
-  deployer.deploy(RES4);
+  deployer.deploy(culinary);
 };

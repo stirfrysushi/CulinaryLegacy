@@ -60,8 +60,9 @@ App = {
        App.addRecipe(jQuery('#recipe_price').val(),jQuery('#recipe_id').val());
       
     });
+
     $(document).on('click', '#approve_asset', function(){
-      App.ApproveAsset(jQuery('#asset_id').val(),jQuery('#to_address').val());
+      App.approveRecipe(jQuery('#asset_id').val(),jQuery('#to_address').val());
    });
 
     $(document).on('click', '#balance_of', function(){
@@ -83,13 +84,13 @@ App = {
       jQuery('#from_address').append(option);
     });
   },
+
   balanceOf: async function(){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
       .call({from:App.current_account[0]})
       .then((receipt)=>{
         jQuery('#balance').html("  "+ receipt)
-        // console.log(receipt);
       })
   } ,
 
@@ -137,7 +138,7 @@ App = {
     })
   },
 
-  ApproveAsset: async function(id,to_address){
+  approveRecipe: async function(id,to_address){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     var option={from:App.current_account[0], gasLimit: "1000000"};
     App.contracts.CulinaryLegacyRecipe.methods.addApproval(to_address,parseInt(id))
@@ -152,7 +153,7 @@ App = {
       console.log(e)
     })
   },
-  TransferAsset: async function(fromAddress,assetId){
+  TransferRecipe: async function(fromAddress,assetId){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     App.contracts.CulinaryLegacyRecipe.methods.assetMap(assetId)
     .call()
@@ -175,17 +176,6 @@ App = {
     })
 
   },
-  
-  BuildAsset: async function(assetId,value){
-    App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.CulinaryLegacyRecipe.methods.build(parseInt(assetId),parseInt(value))
-    .send({from:App.current_account[0],value:Web3.utils.toWei(value.toString())})
-    .on('receipt',(r)=>{
-      location.reload()
-      App.fetchAllAssets();
-      
-    })
-  } ,
 
 ClearApproval: async function(id,to_address){
   App.current_account = await ethereum.request({method: 'eth_accounts'});
@@ -201,24 +191,8 @@ ClearApproval: async function(id,to_address){
     console.log(e)
   })
 },
-Appreciate:function(assetId,appreciationValue){
-App.contracts.CulinaryLegacyRecipe.methods.appreciate(parseInt(assetId),parseInt(appreciationValue))
-.send({from:App.supervisor})
-.on('receipt',(r)=>{
-  location.reload()
-  App.fetchAllAssets();
-  
-})
-} ,
-Depreciate:function(assetId,depreciationValue){
-App.contracts.CulinaryLegacyRecipe.methods.depreciate(parseInt(assetId),parseInt(depreciationValue))
-.send({from:App.supervisor})
-.on('receipt',(r)=>{
-  location.reload()
-  App.fetchAllAssets();
-  
-})
-} 
+
+
 }
 
 

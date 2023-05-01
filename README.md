@@ -5,7 +5,7 @@ Prerequisites:
 - Truffle 
 
 Implementation of E-commerce Dapp:
-- Front-end: Bootstrap Template (source: https://github.com/startbootstrap/startbootstrap-shop-homepage)
+- Front-end: Bootstrap Template
 - Back-end: Solidity (Smart Contract) + Express.js (API)
 
 To deploy to Ganache:
@@ -20,3 +20,6 @@ To start application:
 - npm start 
 - navigate to http://localhost:3000 
 
+Sources: 
+- https://github.com/startbootstrap/startbootstrap-shop-homepage
+- Ramamurthy. Blockchain in Action. Manning Publishers. 2020

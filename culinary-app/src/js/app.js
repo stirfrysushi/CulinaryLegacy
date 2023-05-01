@@ -20,30 +20,35 @@ App = {
     } else {
       App.web3 = new Web3(App.url);
     }
+
+    web3.eth.requestAccounts()
+    .then(function (accounts) {
+    console.log('User accounts:', accounts);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
     ethereum.enable();      
     return App.initContract();
-      
   },
+
 
   initContract: async function() { 
     App.current_account = await ethereum.request({method: 'eth_accounts'});  
     $.getJSON('CulinaryLegacyRecipe.json', function(data) {      
-      App.contracts.RealEstate = new App.web3.eth.Contract(data.abi, data.networks[App.network_id].address, {});
-      App.contracts.RealEstate.methods.supervisor()
+      App.contracts.CulinaryLegacyRecipe = new App.web3.eth.Contract(data.abi, data.networks[App.network_id].address, {});
+      App.contracts.CulinaryLegacyRecipe.methods.contract_owner()
       .call()
       .then((r)=>{
-        // console.log("Supervisor: "+ r);
-        App.supervisor=r;
+        App.contract_owner=r;
       })
-      App.contracts.RealEstate.methods.balanceOf()
+      App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
       .call({from:App.current_account[0]})
       .then((receipt)=>{
         jQuery('#balance').html(" Number of token owned by the current account: "+ receipt)
-        // console.log(receipt);
       })
 
       App.fetchAllAssets();
-      
       
     }) 
          
@@ -51,33 +56,14 @@ App = {
   },  
 
   bindEvents: function() {  
-    $(document).on('click', '#add_asset', function(){
-       App.addAsset(jQuery('#asset_price').val(),jQuery('#asset_owner').val());
+    $(document).on('click', '#add_recipe', function(){
+       App.addRecipe(jQuery('#recipe_price').val(),jQuery('#recipe_id').val());
       
     });
     $(document).on('click', '#approve_asset', function(){
       App.ApproveAsset(jQuery('#asset_id').val(),jQuery('#to_address').val());
    });
 
-   $(document).on('click', '#transfer_asset', function(){
-    App.TransferAsset(jQuery('#from_address').val(),jQuery('#transfer_asset_id').val());
-   });
-
-    $(document).on('click', '#build_asset', function(){
-      App.BuildAsset(jQuery('#build_asset_id').val(),jQuery('#build_asset_value').val());
-    });
-
-    $(document).on('click', '#clear_approval', function(){
-      App.ClearApproval(jQuery('#asset_id').val(),jQuery('#to_address').val());
-    });
-
-    $(document).on('click', '#appreciate_asset', function(){
-      App.Appreciate(jQuery('#assess_asset_id').val(),jQuery('#assess_value').val());
-    });
-
-    $(document).on('click', '#depreciate_asset', function(){
-      App.Depreciate(jQuery('#assess_asset_id').val(),jQuery('#assess_value').val());
-    });
     $(document).on('click', '#balance_of', function(){
       App.balanceOf();
     });
@@ -99,7 +85,7 @@ App = {
   },
   balanceOf: async function(){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.RealEstate.methods.balanceOf()
+    App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
       .call({from:App.current_account[0]})
       .then((receipt)=>{
         jQuery('#balance').html("  "+ receipt)
@@ -107,14 +93,14 @@ App = {
       })
   } ,
 
-  addAsset:function(price,owner){
-    if(price==='' || owner===''){
+  addRecipe:function(price, recipeID){
+    if(price==='' || recipeID===''){
       alert('Please enter all values');
       return false;
     }
 
-    var option={from:App.supervisor}    
-    App.contracts.RealEstate.methods.addAsset(price,owner)
+    var option={from:App.contract_owner}    
+    App.contracts.CulinaryLegacyRecipe.methods.addRecipe(price, recipeID)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
     location.reload()
@@ -126,13 +112,13 @@ App = {
   },
 
   fetchAllAssets:function(){     
-    App.contracts.RealEstate.methods.assetsCount().call().then((length)=>{        
+    App.contracts.CulinaryLegacyRecipe.methods.assetsCount().call().then((length)=>{        
       for(var i=0;i<length;i++){
-        App.contracts.RealEstate.methods.assetMap(i)
+        App.contracts.CulinaryLegacyRecipe.methods.assetMap(i)
         .call()
         .then((r)=>{
-          App.contracts.RealEstate.methods.ownerOf(r.assetId).call().then((result)=>{
-            App.contracts.RealEstate.methods.assetApprovals(r.assetId).call().then((res)=>{
+          App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.assetId).call().then((result)=>{
+            App.contracts.CulinaryLegacyRecipe.methods.assetApprovals(r.assetId).call().then((res)=>{
               if(res==0){
                 res='None'
               } 
@@ -154,7 +140,7 @@ App = {
   ApproveAsset: async function(id,to_address){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     var option={from:App.current_account[0], gasLimit: "1000000"};
-    App.contracts.RealEstate.methods.addApproval(to_address,parseInt(id))
+    App.contracts.CulinaryLegacyRecipe.methods.addApproval(to_address,parseInt(id))
     .send(option)
       // .on('receipt',(r)=>{
       // })
@@ -168,13 +154,13 @@ App = {
   },
   TransferAsset: async function(fromAddress,assetId){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.RealEstate.methods.assetMap(assetId)
+    App.contracts.CulinaryLegacyRecipe.methods.assetMap(assetId)
     .call()
     .then((r)=>{
       console.log(r);
       var option= r.price.toString();
       assetId=parseInt(assetId);
-      App.contracts.RealEstate.methods.transferFrom(fromAddress,assetId)
+      App.contracts.CulinaryLegacyRecipe.methods.transferFrom(fromAddress,assetId)
       .send({from:App.current_account[0],value: Web3.utils.toWei(option)})
       .on('receipt',(rec)=>{
         console.log(rec)
@@ -189,9 +175,10 @@ App = {
     })
 
   },
+  
   BuildAsset: async function(assetId,value){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.RealEstate.methods.build(parseInt(assetId),parseInt(value))
+    App.contracts.CulinaryLegacyRecipe.methods.build(parseInt(assetId),parseInt(value))
     .send({from:App.current_account[0],value:Web3.utils.toWei(value.toString())})
     .on('receipt',(r)=>{
       location.reload()
@@ -204,7 +191,7 @@ ClearApproval: async function(id,to_address){
   App.current_account = await ethereum.request({method: 'eth_accounts'});
   var option={from:App.current_account[0]};  
   id=parseInt(id);   
-  App.contracts.RealEstate.methods.clearApproval(id,to_address)
+  App.contracts.CulinaryLegacyRecipe.methods.clearApproval(id,to_address)
   .send(option)
   .on('transactionHash',(hash)=>{
     
@@ -215,7 +202,7 @@ ClearApproval: async function(id,to_address){
   })
 },
 Appreciate:function(assetId,appreciationValue){
-App.contracts.RealEstate.methods.appreciate(parseInt(assetId),parseInt(appreciationValue))
+App.contracts.CulinaryLegacyRecipe.methods.appreciate(parseInt(assetId),parseInt(appreciationValue))
 .send({from:App.supervisor})
 .on('receipt',(r)=>{
   location.reload()
@@ -224,7 +211,7 @@ App.contracts.RealEstate.methods.appreciate(parseInt(assetId),parseInt(appreciat
 })
 } ,
 Depreciate:function(assetId,depreciationValue){
-App.contracts.RealEstate.methods.depreciate(parseInt(assetId),parseInt(depreciationValue))
+App.contracts.CulinaryLegacyRecipe.methods.depreciate(parseInt(assetId),parseInt(depreciationValue))
 .send({from:App.supervisor})
 .on('receipt',(r)=>{
   location.reload()

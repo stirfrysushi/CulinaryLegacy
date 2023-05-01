@@ -10,6 +10,7 @@
   "dependencies": {
     "bootstrap": "^5.2.3",
     "express": "^4.16.4",
+    "jQuery": "^1.7.4",
     "nodemon": "^2.0.22"
   },
   "description": ""

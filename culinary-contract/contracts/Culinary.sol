@@ -16,6 +16,7 @@ contract CulinaryLegacyRecipe is ERC721{
     mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
 
     //#########Event and Modifier##############
+    
     //Events
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
     event recipeRequestCompleted(address indexed seller, address indexed buyer, uint recipeID); 
@@ -48,6 +49,7 @@ contract CulinaryLegacyRecipe is ERC721{
         require(registeredUser[userID] == 0, "User not registered"); 
         registeredUser[userID] = 0;
     }
+    
     //self-unregister onself from the contract
     function selfUnregister() public onlyRegisteredUser{
         if (msg.sender != contract_owner){

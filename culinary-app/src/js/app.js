@@ -99,7 +99,7 @@ App = {
 
 
   fetchRecipe:function(){     
-    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts.call().then((length)=>{        
+    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{  
       for(var i=0;i<length;i++){
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()
@@ -107,8 +107,8 @@ App = {
           App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeId).call().then((result)=>{
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
-              '<h6 class="card-title">Asset # '+r.recipeId+'</h6>'+
-              '<p class="card-text">Price: '+r.price+' ETH </p></div>'+              
+              '<h6 class="card-title">Recipe Id '+r.recipeId+'</h6>'+
+              '<p class="card-text">Recipe Price: '+r.price+' ETH </p></div>'+              
               '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
                 $('#recipe').append(card);  
             })

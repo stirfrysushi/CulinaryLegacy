@@ -10,6 +10,7 @@ contract CulinaryLegacyRecipe is ERC721{
     }
 
     uint256 public recipeCounts; //increment id for recipe
+
     address public contract_owner;
     mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
     mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
@@ -66,7 +67,6 @@ contract CulinaryLegacyRecipe is ERC721{
         recipeCounts = recipeCounts+1;
     }
     
-    //TODO: consider checking ASK example
     function request(uint recipeID, address buyer, address payable seller) onlyRegisteredUser payable public{
         require(recipeOwner[recipeID] == seller, "NotTheRecipeOwner");
         recipeOwner[recipeID]=buyer;
@@ -74,7 +74,6 @@ contract CulinaryLegacyRecipe is ERC721{
         emit recipeRequest(buyer, seller, recipeID);
     }
 
-    ////TODO: consider checking ASK example
     function response(address fromSeller, address toBuyer, uint recipeID) public{
         // if buyer not registered -> revert + announce cancellation 
         if (registeredUser[toBuyer] != 1) {

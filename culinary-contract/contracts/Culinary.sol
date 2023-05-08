@@ -9,11 +9,12 @@ contract CulinaryLegacyRecipe is ERC721{
         uint256 price;
     }
 
-    uint256 recipeCount; //increment id for recipe
+    uint256 public recipeCounts; //increment id for recipe
     address public contract_owner;
     mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
     mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
     mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
+    mapping(uint256 => string) recipeNames; //recipeID -> the name
 
     //#########Event and Modifier##############
     
@@ -58,10 +59,11 @@ contract CulinaryLegacyRecipe is ERC721{
     }
     
     //Create new recipe for sale
-    function addRecipe(uint price) public onlyRegisteredUser{
-        recipeMap[recipeCount] = Recipe(recipeCount, price);
-        mint(msg.sender,recipeCount);
-        recipeCount = recipeCount+1;
+    function addRecipe(string memory name, uint price) public onlyRegisteredUser{
+        recipeMap[recipeCounts] = Recipe(recipeCounts, price);
+        recipeNames[recipeCounts] = name; 
+        mint(msg.sender,recipeCounts);
+        recipeCounts = recipeCounts+1;
     }
     
     //TODO: consider checking ASK example

@@ -25,7 +25,6 @@ App = {
 
 
   initContract: async function() { 
-    console.log("is it here")
     App.current_account = await ethereum.request({method: 'eth_accounts'});  
     $.getJSON('CulinaryLegacyRecipe.json', function(data) {      
       App.contracts.CulinaryLegacyRecipe = new App.web3.eth.Contract(data.abi, data.networks[App.network_id].address, {});
@@ -34,15 +33,9 @@ App = {
       .then((r)=>{
         App.contract_owner=r;
       })
-      App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
-      .call({from:App.current_account[0]})
-      .then((receipt)=>{
-        jQuery('#balance').html(" Number of token owned by the current account: "+ receipt)
-      })
       App.fetchRecipe();
     
     }) 
-        
     return App.bindEvents();
   },  
 
@@ -83,7 +76,7 @@ App = {
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
     location.reload()
-    App.fetchAllAssets();
+    App.fetchRecipe();
     
   }).on('error',(e)=>{
     console.log('error')
@@ -106,7 +99,7 @@ App = {
 
 
   fetchRecipe:function(){     
-    App.contracts.CulinaryLegacyRecipe.methods.recipeCount().call().then((length)=>{        
+    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts.call().then((length)=>{        
       for(var i=0;i<length;i++){
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()

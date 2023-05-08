@@ -23,7 +23,6 @@ App = {
     return App.initContract();  
   },
 
-
   initContract: async function() { 
     App.current_account = await ethereum.request({method: 'eth_accounts'});  
     $.getJSON('CulinaryLegacyRecipe.json', function(data) {      
@@ -41,7 +40,7 @@ App = {
 
   bindEvents: function() {  
     $(document).on('click', '#add_recipe', function(){
-       App.addRecipe(jQuery('#recipe_price').val(),jQuery('#recipe_id').val());
+       App.addRecipe(jQuery('#recipe_id').val(),jQuery('#recipe_price').val());
       
     });
 
@@ -65,36 +64,22 @@ App = {
       })
   } ,
 
-  addRecipe:function(price, recipeID){
-    if(price==='' || recipeID===''){
+  addRecipe:function(id, price){
+    if(id==='' || price===''){
       alert('Please enter all values');
       return false;
     }
-
     var option={from:App.contract_owner}    
-    App.contracts.CulinaryLegacyRecipe.methods.addRecipe(price, recipeID)
+    App.contracts.CulinaryLegacyRecipe.methods.addRecipe(id, price)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
     location.reload()
     App.fetchRecipe();
+    console.log('does it get to here')
     
   }).on('error',(e)=>{
     console.log('error')
   })
-  },
-
-  approveRecipe: async function(id,to_address){
-    App.current_account = await ethereum.request({method: 'eth_accounts'});
-    var option={from:App.current_account[0], gasLimit: "1000000"};
-    App.contracts.CulinaryLegacyRecipe.methods.addApproval(to_address,parseInt(id))
-    .send(option)
-    .on('transactionHash',(hash)=>{
-      location.reload()
-      App.fetchRecipe();
-      
-    }).on('error',(e)=>{
-      console.log(e)
-    })
   },
 
 
@@ -117,7 +102,7 @@ App = {
     })
   },
   
-  TransferRecipe: async function(fromAddress,assetId){
+  request: async function(fromAddress,assetId){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     App.contracts.CulinaryLegacyRecipe.methods.recipeMap(assetId)
     .call()

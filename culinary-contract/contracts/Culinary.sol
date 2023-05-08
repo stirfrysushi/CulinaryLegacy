@@ -15,7 +15,7 @@ contract CulinaryLegacyRecipe is ERC721{
     mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
     mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
     mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
-    mapping(uint256 => string) recipeNames; //recipeID -> the name
+    mapping(uint256 => uint256) recipeNames; //recipeID -> id given by users
 
     //#########Event and Modifier##############
     
@@ -60,9 +60,9 @@ contract CulinaryLegacyRecipe is ERC721{
     }
     
     //Create new recipe for sale
-    function addRecipe(string memory name, uint price) public onlyRegisteredUser{
+    function addRecipe(uint id, uint price) public onlyRegisteredUser{
         recipeMap[recipeCounts] = Recipe(recipeCounts, price);
-        recipeNames[recipeCounts] = name; 
+        recipeNames[recipeCounts] = id; 
         mint(msg.sender,recipeCounts);
         recipeCounts = recipeCounts+1;
     }

@@ -32,6 +32,12 @@ App = {
       .then((r)=>{
         App.contract_owner=r;
       })
+      App.contracts.CulinaryLegacyRecipe.methods.balanceOf(App.current_account[0])
+        .call({from:App.current_account[0]})
+        .then((receipt)=>{
+          jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
+          console.log(receipt);
+        })
       App.fetchRecipe();
     
     }) 
@@ -75,28 +81,26 @@ App = {
     console.log(hash);
     location.reload()
     App.fetchRecipe();
-    console.log('does it get to here')
     
   }).on('error',(e)=>{
     console.log('error')
   })
   },
 
-
   fetchRecipe:function(){     
     App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{  
+      console.log(length)
       for(var i=0;i<length;i++){
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()
         .then((r)=>{
-          App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeId).call().then((result)=>{
-              var card='<div class="col-lg-3"><div class="card">'+
-              '<div class="card-body">'+
-              '<h6 class="card-title">Recipe Id '+r.recipeId+'</h6>'+
-              '<p class="card-text">Recipe Price: '+r.price+' ETH </p></div>'+              
-              '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
-                $('#recipe').append(card);  
-            })
+            var card='<div class="col-lg-3"><div class="card">'+
+            '<div class="card-body">'+
+            '<h6 class="card-title">Recipe Id '+r.recipeId+'</h6>'+
+            '<p class="card-text">Recipe Price: '+r.price+' ETH </p></div>'+              
+            '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
+              $('#recipe').append(card);  
+              console.log(card)
         })
       }
     })

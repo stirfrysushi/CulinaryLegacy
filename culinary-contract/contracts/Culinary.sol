@@ -60,7 +60,7 @@ contract CulinaryLegacyRecipe is ERC721{
     }
     
     //Create new recipe for sale
-    function addRecipe(uint id, uint price) public onlyRegisteredUser{
+    function addRecipe(uint id, uint price) public {
         recipeMap[recipeCounts] = Recipe(recipeCounts, price);
         recipeNames[recipeCounts] = id; 
         mint(msg.sender,recipeCounts);

@@ -24,7 +24,8 @@ App = {
   },
 
 
-  iinitContract: async function() { 
+  initContract: async function() { 
+    console.log("is it here")
     App.current_account = await ethereum.request({method: 'eth_accounts'});  
     $.getJSON('CulinaryLegacyRecipe.json', function(data) {      
       App.contracts.CulinaryLegacyRecipe = new App.web3.eth.Contract(data.abi, data.networks[App.network_id].address, {});
@@ -62,8 +63,6 @@ App = {
     App.populateAddress();
   },
 
-  
-
   balanceOf: async function(){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
@@ -96,11 +95,9 @@ App = {
     var option={from:App.current_account[0], gasLimit: "1000000"};
     App.contracts.CulinaryLegacyRecipe.methods.addApproval(to_address,parseInt(id))
     .send(option)
-      // .on('receipt',(r)=>{
-      // })
     .on('transactionHash',(hash)=>{
       location.reload()
-      App.fetchAllAssets();
+      App.fetchRecipe();
       
     }).on('error',(e)=>{
       console.log(e)
@@ -114,34 +111,22 @@ App = {
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()
         .then((r)=>{
-          App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.assetId).call().then((result)=>{
+          App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeId).call().then((result)=>{
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
               '<h6 class="card-title">Asset # '+r.recipeId+'</h6>'+
               '<p class="card-text">Price: '+r.price+' ETH </p></div>'+              
               '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
-                $('#assets').append(card);  
+                $('#recipe').append(card);  
             })
         })
       }
     })
   },
-
-  populateAddress : function(){  
-    new Web3(App.url).eth.getAccounts((err, accounts) => {
-      var option='<option></option>';
-      for(var i=0;i<accounts.length;i++){
-        option+='<option>'+accounts[i]+'</option>'; 
-      }
-      jQuery('#recipe_owner').append(option);
-      jQuery('#to_address').append(option);
-      jQuery('#from_address').append(option);
-    });
-  },
   
   TransferRecipe: async function(fromAddress,assetId){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.CulinaryLegacyRecipe.methods.assetMap(assetId)
+    App.contracts.CulinaryLegacyRecipe.methods.recipeMap(assetId)
     .call()
     .then((r)=>{
       console.log(r);
@@ -163,8 +148,20 @@ App = {
 
   },
 
-};
+  populateAddress : function(){  
+    new Web3(App.url).eth.getAccounts((err, accounts) => {
 
+      var option='<option></option>';
+      for(var i=0;i<accounts.length;i++){
+        option+='<option>'+accounts[i]+'</option>'; 
+      }
+      jQuery('#recipe_owner').append(option);
+      jQuery('#to_address').append(option);
+      jQuery('#from_address').append(option);
+    });
+  },
+
+};
 
 
 

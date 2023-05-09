@@ -32,13 +32,12 @@ App = {
       .then((r)=>{
         App.contract_owner=r;
       })
-      App.contracts.CulinaryLegacyRecipe.methods.balanceOf(App.current_account[0])
+      App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
         .call({from:App.current_account[0]})
         .then((receipt)=>{
           jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
         })
       App.fetchRecipe();
-    
     }) 
     return App.bindEvents();
   },  
@@ -54,7 +53,7 @@ App = {
 
    $(document).on('click', '#unregister', function(){
     App.unregister(); 
- });
+    });
 
 
     $(document).on('click', '#request', function(){
@@ -62,53 +61,57 @@ App = {
    });
 
     $(document).on('click', '#balance_of', function(){
-      App.balanceOf();
+      App._balanceOf();
     });
 
     App.populateAddress();
   },
-
-  balanceOf: async function(){
+  //_balanceOf (of JS file for handling submit request) != balanceOf (of contract)
+  _balanceOf: async function(){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
     App.contracts.CulinaryLegacyRecipe.methods.balanceOf()
       .call({from:App.current_account[0]})
+      //.then(console.log);
+       
       .then((receipt)=>{
-        jQuery('#balance').html("  "+ receipt)
+        jQuery('#balance1').html("  "+ receipt)
         console.log(receipt); 
       })
+    
   } ,
 
-  addRecipe:function(id, price){
-    if(id==='' || price===''){
+  addRecipe:function(owner, price){
+    if(owner==='' || price===''){
       alert('Please enter all values');
       return false;
     }
-    var option={from:App.contract_owner}    
-    App.contracts.CulinaryLegacyRecipe.methods.addRecipe(id, price)
+    var option={from:App.contract_owner}
+    App.contracts.CulinaryLegacyRecipe.methods.addRecipe(owner, price)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
-    location.reload()
-    App.fetchRecipe();
+    //window.location.reload()
+    //App.fetchRecipe();
     
   }).on('error',(e)=>{
     console.log('error')
   })
   },
 
-  fetchRecipe:function(){     
-    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{        
+  fetchRecipe: function(){     
+    App.contracts.CulinaryLegacyRecipe.methods.recipeCountsLength().call().then((length)=>{     
+      console.log(length);
       for(var i=0;i<length;i++){
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()
         .then((r)=>{
           App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeID).call().then((result)=>{
-              
+            
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
-              '<h6 class="card-title">Asset # '+r.assetId+'</h6>'+
+              '<h6 class="card-title">Asset # '+r.recipeID+'</h6>'+
               '<p class="card-text">Price: '+r.price+' ETH </p></div>'+              
-              '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
-                $('#assets').append(card);
+              '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br></small></div></div></div>';            
+              $('#assets').append(card);
             })
         })
       }
@@ -141,12 +144,12 @@ App = {
 
   register: function() {
     alert('This address is now a member, thank you for registering ( ๑‾̀◡‾́)σ" ');
-    App.contracts.CulinaryLegacyRecipe.methods.register(); 
+    App.contracts.CulinaryLegacyRecipe.methods.register().call({from:App.current_account[0]}); 
   },
 
   unregister: function() {
     alert('This address is no longer a member, goodbye :('); 
-    App.contracts.CulinaryLegacyRecipe.methods.unregister(); 
+    App.contracts.CulinaryLegacyRecipe.methods.unregister().call({from:App.current_account[0]}); 
   },
 
   populateAddress : function(){  

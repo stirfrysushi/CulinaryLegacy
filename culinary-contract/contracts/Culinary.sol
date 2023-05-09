@@ -25,6 +25,7 @@ contract CulinaryLegacyRecipe is ERC721{
     event recipeRequestCompleted(address indexed seller, address indexed buyer, uint recipeID); 
     event recipeRequestDenied(address indexed seller, address indexed buyer, uint recipeID); 
     event recipeRequest(address indexed seller, address indexed buyer, uint recipeID); 
+    event _register(address from, string message);
 
     modifier onlyContractOwner(){
         require(msg.sender == contract_owner);
@@ -49,8 +50,10 @@ contract CulinaryLegacyRecipe is ERC721{
     }
 
 
-    function register() public {
+    function register() public payable {
         registeredUser[msg.sender] = 1;
+        //todo: emit event
+        emit _register(msg.sender, "register successfully");
     }
 
     function unregisterMember(address userID) onlyContractOwner public{
@@ -66,12 +69,19 @@ contract CulinaryLegacyRecipe is ERC721{
     }
     
     //Create new recipe for sale
-    function addRecipe(uint id, uint price) public {
+    //remove id as recipeCounts is automatically incremented
+    function addRecipe(uint price) public {
         recipeMap[recipeCounts] = Recipe(recipeCounts, price);
-        recipeNames[recipeCounts] = id; 
+        //recipeNames[recipeCounts] = id; 
         mint(msg.sender,recipeCounts);
         recipeCounts = recipeCounts+1;
         ownedRecipesCount[msg.sender]++; 
+    }
+    function mint(address to, uint256 recipeId) internal {
+        require(to != address(0), "ZeroAddressMiniting");
+        require(!exists(recipeId), "AlreadyMinted");
+        recipeOwner[recipeId] = to;
+        //emit Transfer(address(0), to, assetId);
     }
     
     function request(uint recipeID, address buyer, address payable seller) onlyRegisteredUser payable public{
@@ -109,13 +119,7 @@ contract CulinaryLegacyRecipe is ERC721{
     }
 
     //########Functions used by other functions##################
-    function mint(address to, uint256 recipeId) internal {
-        require(to != address(0), "ZeroAddressMiniting");
-        require(!exists(recipeId), "AlreadyMinted");
-        recipeOwner[recipeId] = to;
-        ownedRecipesCount[to]++; 
-        //emit Transfer(address(0), to, assetId);
-    }
+    
     function exists(uint256 recipeId) internal view returns (bool) {
         return recipeOwner[recipeId] != address(0);
     }

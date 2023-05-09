@@ -71,6 +71,7 @@ contract CulinaryLegacyRecipe is ERC721{
         recipeNames[recipeCounts] = id; 
         mint(msg.sender,recipeCounts);
         recipeCounts = recipeCounts+1;
+        ownedRecipesCount[msg.sender]++; 
     }
     
     function request(uint recipeID, address buyer, address payable seller) onlyRegisteredUser payable public{
@@ -112,6 +113,7 @@ contract CulinaryLegacyRecipe is ERC721{
         require(to != address(0), "ZeroAddressMiniting");
         require(!exists(recipeId), "AlreadyMinted");
         recipeOwner[recipeId] = to;
+        ownedRecipesCount[to]++; 
         //emit Transfer(address(0), to, assetId);
     }
     function exists(uint256 recipeId) internal view returns (bool) {

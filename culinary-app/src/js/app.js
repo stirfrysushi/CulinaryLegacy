@@ -141,7 +141,7 @@ App = {
   unregister: function() {
     alert('This address is no longer a member, goodbye :('); 
     App.contracts.CulinaryLegacyRecipe.methods.unregister(); 
-  }
+  },
 
   populateAddress : function(){  
     new Web3(App.url).eth.getAccounts((err, accounts) => {

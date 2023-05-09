@@ -112,12 +112,16 @@ contract CulinaryLegacyRecipe is ERC721{
     }
 
     //for testing purpose
-    function ownerOf(uint256 recipeId) onlyRecipeOwner(recipeId) public view returns (address) {
+    //function ownerOf(uint256 recipeId) onlyRecipeOwner(recipeId) public view returns (address)
+    function ownerOf(uint256 recipeId) public view returns (address) {
         address owner = recipeOwner[recipeId];
         require(owner != address(0), "NoAssetExists");
         return owner;
     }
 
+    function recipeCountsLength() public view returns (uint) {
+        return recipeCounts;
+    }
     //########Functions used by other functions##################
     
     function exists(uint256 recipeId) internal view returns (bool) {

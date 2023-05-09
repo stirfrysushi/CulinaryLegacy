@@ -36,6 +36,7 @@ App = {
         .call({from:App.current_account[0]})
         .then((receipt)=>{
           jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
+          jQuery('#user').html("Current user is: "+ App.current_account[0])
         })
       App.fetchRecipe();
     }) 
@@ -85,12 +86,13 @@ App = {
       alert('Please enter all values');
       return false;
     }
-    var option={from:App.contract_owner}
+    //var option = {from: ethereum.request({method: 'eth_accounts'})};
+    var option={from:App.contract_owner} //might be the reason why only contract owner able to add recipe?
     App.contracts.CulinaryLegacyRecipe.methods.addRecipe(owner, price)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
-    //window.location.reload()
-    //App.fetchRecipe();
+    window.location.reload()
+    App.fetchRecipe();
     
   }).on('error',(e)=>{
     console.log('error')

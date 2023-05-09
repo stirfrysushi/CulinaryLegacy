@@ -15,7 +15,7 @@ contract CulinaryLegacyRecipe is ERC721{
     mapping(address => uint256) public registeredUser; //keeping track registered user (address => 0/1)
     mapping(uint256 => Recipe) public recipeMap; // recipeId -> recipe object
     mapping(uint256 => address) public recipeOwner; //recipeId -> creator // different recipeId shares the same creator
-    mapping(uint256 => uint256) public recipeNames; //recipeID -> id given by users
+    //mapping(uint256 => uint256) public recipeNames; //recipeID -> id given by users
     mapping(address => uint256) public ownedRecipesCount; // address -> number of recipes owned // this is for counting balance 
 
     //#########Event and Modifier##############
@@ -70,12 +70,12 @@ contract CulinaryLegacyRecipe is ERC721{
     
     //Create new recipe for sale
     //remove id as recipeCounts is automatically incremented
-    function addRecipe(uint price) public {
+    function addRecipe(address owner, uint price) public {
         recipeMap[recipeCounts] = Recipe(recipeCounts, price);
         //recipeNames[recipeCounts] = id; 
-        mint(msg.sender,recipeCounts);
+        mint(owner,recipeCounts);
         recipeCounts = recipeCounts+1;
-        ownedRecipesCount[msg.sender]++; 
+        ownedRecipesCount[owner]++; 
     }
     function mint(address to, uint256 recipeId) internal {
         require(to != address(0), "ZeroAddressMiniting");

@@ -36,7 +36,7 @@ App = {
         .call({from:App.current_account[0]})
         .then((receipt)=>{
           jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
-          jQuery('#user').html(" Current user is: "+ App.current_account[0])
+          jQuery('#user').html("Current user is: "+ App.current_account[0])
         })
 
 
@@ -86,7 +86,7 @@ App = {
       alert('Please enter all values');
       return false;
     }
-    var option={from:App.contract_owner}    
+    var option={from:App.current_account[0]}    
     App.contracts.CulinaryLegacyRecipe.methods.addRecipe(id, price)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
@@ -99,13 +99,12 @@ App = {
   },
 
   fetchRecipe:function(){     
-    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{        
+    App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{ 
       for(var i=0;i<length;i++){
         App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
         .call()
         .then((r)=>{
           App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeID).call().then((result)=>{
-              
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
               '<h6 class="card-title">Asset # '+r.assetId+'</h6>'+
@@ -149,7 +148,7 @@ App = {
 
   unregister: function() {
     alert('This address is no longer a member, goodbye :('); 
-    App.contracts.CulinaryLegacyRecipe.methods.unregister(); 
+    App.contracts.CulinaryLegacyRecipe.methods.selfUnregister(); 
   },
 
   populateAddress : function(){  

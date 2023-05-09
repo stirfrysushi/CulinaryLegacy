@@ -36,8 +36,11 @@ App = {
         .call({from:App.current_account[0]})
         .then((receipt)=>{
           jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
+          jQuery('#user').html(" Current user is: "+ App.current_account[0])
         })
-      App.fetchRecipe();
+
+
+      //App.fetchRecipe();
     
     }) 
     return App.bindEvents();

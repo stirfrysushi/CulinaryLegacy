@@ -36,7 +36,6 @@ App = {
         .call({from:App.current_account[0]})
         .then((receipt)=>{
           jQuery('#balance').html(" Number of recipes owned by the current account: "+ receipt)
-          console.log(receipt);
         })
       App.fetchRecipe();
     
@@ -47,8 +46,16 @@ App = {
   bindEvents: function() {  
     $(document).on('click', '#add_recipe', function(){
        App.addRecipe(jQuery('#recipe_id').val(),jQuery('#recipe_price').val());
-      
     });
+
+    $(document).on('click', '#register', function(){
+      App.register(); 
+   });
+
+   $(document).on('click', '#unregister', function(){
+    App.unregister(); 
+ });
+
 
     $(document).on('click', '#request', function(){
       App.request(jQuery('#recipe_id').val(),jQuery('#to_address').val());
@@ -67,6 +74,7 @@ App = {
       .call({from:App.current_account[0]})
       .then((receipt)=>{
         jQuery('#balance').html("  "+ receipt)
+        console.log(receipt); 
       })
   } ,
 
@@ -89,18 +97,13 @@ App = {
 
   fetchRecipe:function(){     
     App.contracts.CulinaryLegacyRecipe.methods.recipeCounts().call().then((length)=>{  
-      console.log(length)
       for(var i=0;i<length;i++){
-        App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i)
-        .call()
-        .then((r)=>{
+        App.contracts.CulinaryLegacyRecipe.methods.recipeMap(i).call().then((r)=>{
             var card='<div class="col-lg-3"><div class="card">'+
             '<div class="card-body">'+
             '<h6 class="card-title">Recipe Id '+r.recipeId+'</h6>'+
-            '<p class="card-text">Recipe Price: '+r.price+' ETH </p></div>'+              
-            '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br><b>Approved:</b> '+res+'</small></div></div></div>';            
-              $('#recipe').append(card);  
-              console.log(card)
+            '<p class="card-text">Recipe Price: '+r.price+' ETH </p></div>'+                 
+              $('#recipes').append(card);  
         })
       }
     })
@@ -130,6 +133,16 @@ App = {
 
   },
 
+  register: function() {
+    alert('This address is now a member, thank you for registering ( ๑‾̀◡‾́)σ" ');
+    App.contracts.CulinaryLegacyRecipe.methods.register(); 
+  },
+
+  unregister: function() {
+    alert('This address is no longer a member, goodbye :('); 
+    App.contracts.CulinaryLegacyRecipe.methods.unregister(); 
+  }
+
   populateAddress : function(){  
     new Web3(App.url).eth.getAccounts((err, accounts) => {
 
@@ -144,7 +157,6 @@ App = {
   },
 
 };
-
 
 
 // don't change
@@ -172,3 +184,6 @@ $(function() {
     };
   });
 });
+
+
+// kill port ->> lsof -i tcp:3000 ->> kill [PID]

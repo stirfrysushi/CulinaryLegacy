@@ -12,10 +12,11 @@ contract CulinaryLegacyRecipe is ERC721{
     uint256 public recipeCounts; //increment id for recipe
 
     address public contract_owner;
-    mapping(address => uint256) registeredUser; //keeping track registered user (address => 0/1)
-    mapping(uint256 => Recipe) recipeMap; // recipeId -> recipe object
-    mapping(uint256 => address) recipeOwner; //recipeId -> creator // different recipeId shares the same creator
-    mapping(uint256 => uint256) recipeNames; //recipeID -> id given by users
+    mapping(address => uint256) public registeredUser; //keeping track registered user (address => 0/1)
+    mapping(uint256 => Recipe) public recipeMap; // recipeId -> recipe object
+    mapping(uint256 => address) public recipeOwner; //recipeId -> creator // different recipeId shares the same creator
+    mapping(uint256 => uint256) public recipeNames; //recipeID -> id given by users
+    mapping(address => uint256) public ownedRecipesCount; // address -> number of recipes owned // this is for counting balance 
 
     //#########Event and Modifier##############
     
@@ -42,6 +43,11 @@ contract CulinaryLegacyRecipe is ERC721{
     constructor() public{
         contract_owner = msg.sender;
     }
+
+   function balanceOf() public view returns (uint256) {
+        return ownedRecipesCount[msg.sender];
+    }
+
 
     function register() public {
         registeredUser[msg.sender] = 1;

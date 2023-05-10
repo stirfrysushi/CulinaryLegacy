@@ -88,6 +88,8 @@ contract CulinaryLegacyRecipe is ERC721{
         require(recipeOwner[recipeID] == seller, "NotTheRecipeOwner");
         recipeOwner[recipeID]=msg.sender;
         seller.transfer(recipeMap[recipeID].price * 1000000000000000000);
+        ownedRecipesCount[msg.sender]++; 
+        ownedRecipesCount[seller]--; 
         emit recipeRequest(msg.sender , seller, recipeID);
     }
 

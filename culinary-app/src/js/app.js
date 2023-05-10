@@ -110,7 +110,7 @@ App = {
             
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
-              '<h6 class="card-title">Asset # '+r.recipeID+'</h6>'+
+              '<h6 class="card-title">Recipe # '+r.recipeID+'</h6>'+
               '<p class="card-text">Price: '+r.price+' ETH </p></div>'+              
               '<div class="card-footer">'+'<small><b>Owner:</b> '+result+'<br></small></div></div></div>';            
               $('#assets').append(card);

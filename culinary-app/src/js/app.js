@@ -45,7 +45,7 @@ App = {
 
   bindEvents: function() {  
     $(document).on('click', '#add_recipe', function(){
-       App.addRecipe(jQuery('#recipe_id').val(),jQuery('#recipe_price').val());
+       App.addRecipe(jQuery('#creator_address').val(),jQuery('#recipe_price').val());
     });
 
     $(document).on('click', '#register', function(){
@@ -119,23 +119,27 @@ App = {
       }
     })
   },
-  
-  request: async function(fromAddress,assetId){
+  /*
+  $(document).on('click', '#request', function(){
+      App.request(jQuery('#recipe_id').val(),jQuery('#to_address').val());
+   });
+   */
+  request: async function(recipeId, toAddress){
     App.current_account = await ethereum.request({method: 'eth_accounts'});
-    App.contracts.CulinaryLegacyRecipe.methods.recipeMap(assetId)
+    App.contracts.CulinaryLegacyRecipe.methods.recipeMap(recipeId)
     .call()
     .then((r)=>{
       console.log(r);
       var option= r.price.toString();
-      assetId=parseInt(assetId);
-      App.contracts.CulinaryLegacyRecipe.methods.transferFrom(fromAddress,assetId)
+      recipeId=parseInt(recipeId);
+      App.contracts.CulinaryLegacyRecipe.methods.request(recipeId, toAddress)
       .send({from:App.current_account[0],value: Web3.utils.toWei(option)})
       .on('receipt',(rec)=>{
         console.log(rec)
       })
       .on('transactionHash',(hash)=>{
         location.reload()
-        App.fetchAllAssets();
+        App.fetchRecipe();
         
       }).on('error',(e)=>{
         console.log(e)

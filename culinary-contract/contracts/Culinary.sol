@@ -84,11 +84,11 @@ contract CulinaryLegacyRecipe is ERC721{
         //emit Transfer(address(0), to, assetId);
     }
     
-    function request(uint recipeID, address buyer, address payable seller) payable public{
+    function request(uint recipeID,  address payable seller) payable public{
         require(recipeOwner[recipeID] == seller, "NotTheRecipeOwner");
-        recipeOwner[recipeID]=buyer;
-        seller.transfer(msg.value);
-        emit recipeRequest(buyer, seller, recipeID);
+        recipeOwner[recipeID]=msg.sender;
+        seller.transfer(recipeMap[recipeID].price * 1000000000000000000);
+        emit recipeRequest(msg.sender , seller, recipeID);
     }
 
     function response(address fromSeller, address toBuyer, uint recipeID) public{

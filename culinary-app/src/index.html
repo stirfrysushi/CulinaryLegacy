@@ -38,111 +38,38 @@
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="assets/img2.jpeg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Classic Burger</h5>
-                                    <!-- Product price-->
-                                   4 ETH
-                                </div>
+                    <!-- adding more recipes-->
+                    <div class='col-lg-2 forms'>
+                        <form>
+                            <h3>Add New Recipes</h3>       
+                                        
+                            <div class="form-group">
+                                <label for="creator_address">Creator address</label>
+                                <input type="text" class="form-control" id="creator_address" placeholder="Enter Owner Address Here">
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <button type="button" id='request' class="btn btn-info btn-large">Request</button>
+                            <div class="form-group">
+                                <label for="recipe_price">Recipe Price</label>
+                                <input type="text" class="form-control" id="recipe_price" placeholder="Enter Recipe Price">
                             </div>
-                        </div>
+                            <button type="button" id='add_recipe' class="btn btn-info btn-sm">Submit Recipe</button>
+                        </form> 
                     </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="assets/img4.jpeg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Vietnamese Chicken Noodle Soop</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">2 ETH</span>
-                                   1 ETH
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <button type="button" id='request' class="btn btn-info btn-large">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="assets/img1.jpeg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder"> Italian Carbonara</h5>
-                                    <!-- Product price-->
-                                        <span class="text-muted text-decoration-line-through">2 ETH</span>
-                                        0.5 ETH
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <button type="button" id='request' class="btn btn-info btn-large">Request</button>
-                            </div>
-                        </div>
-                    </div>
-                            <!-- adding more recipes-->
-                            <div class='col-lg-2 forms'>
-                                <form>
-                                    <h3>Add New Recipes</h3>       
-                                                
-                                    <div class="form-group">
-                                        <label for="creator_address">Creator address</label>
-                                        <input type="text" class="form-control" id="creator_address" placeholder="Enter Owner Address Here">
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="recipe_price">Recipe Price</label>
-                                        <input type="text" class="form-control" id="recipe_price" placeholder="Enter Recipe Price">
-                                      </div>
-                                    <button type="button" id='add_recipe' class="btn btn-info btn-sm">Submit Recipe</button>
-                                </form> 
-                              </div>
-                            </div>
 
-                            <div class='col-lg-2 forms'>
-                                <form>
-                                    <h3>Request</h3>       
-                                                
-                                    <div class="form-group">
-                                        <label for="recipe_id">Recipe ID</label>
-                                        <input type="text" class="form-control" id="recipe_id" placeholder="Enter Owner Address Here">
-                                      </div>
-                                      <div class="form-group">
-                                        <label for="to_address">Owner Address</label>
-                                        <input type="text" class="form-control" id="to_address" placeholder="Enter Recipe Price">
-                                      </div>
-                                    <button type="button" id='request' class="btn btn-info btn-sm">Submit Recipe</button>
-                                </form> 
-                              </div>
-                            </div>
+                    <div class='col-lg-2 forms'>
+                        <form>
+                            <h3>Request</h3>       
+                                        
+                            <div class="form-group">
+                                <label for="recipe_id">Recipe ID</label>
+                                <input type="text" class="form-control" id="recipe_id" placeholder="Enter Owner Address Here">
+                                </div>
+                                <div class="form-group">
+                                <label for="to_address">Owner Address</label>
+                                <input type="text" class="form-control" id="to_address" placeholder="Enter Recipe Price">
+                                </div>
+                            <button type="button" id='request' class="btn btn-info btn-sm">Submit Recipe</button>
+                        </form> 
+                        </div>
                     </div>
 
 

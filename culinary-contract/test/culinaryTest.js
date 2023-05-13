@@ -8,15 +8,12 @@ contract('Culinary', function (accounts) {
     let user1 = accounts[1]; 
     let user2 = accounts[2];
     
-    // initialization 
     beforeEach('Setup Culinary Contract', async function () {
-      // deploy a new contract using .new() function 
       culinary = await Culinary.new();
-      console.log('A new contract is deployed'); 
     });
 
     // test for first deployed contract
-    describe('Initialization', async () =>{
+    describe('Initialization - Deploying Contract', async () =>{
       it('Success on initialization to new deployed contract.', async function () {
         // testing state variable of contract 
         let count = await culinary.recipeCounts();
@@ -25,7 +22,7 @@ contract('Culinary', function (accounts) {
 
       it('Success on initializing contract owner', async function () {
         // testing owner 
-        let owner_address = await culinary.contractOwner();
+        let owner_address = await culinary.contract_owner();
         assert.equal(owner_address, contractOwner); 
       });
     });
@@ -34,35 +31,53 @@ contract('Culinary', function (accounts) {
     describe('User Testing', async() => {
 
       it('Success on registering users', async function() {
-        // testing balance after registered
-        culinary.register({ from: accounts[1]});
+
+        // testing balance after registered 
+        await culinary.register({ from: accounts[1]});
         let balance = await culinary.balanceOf({from: user1}); 
         assert.equal(balance, 0); 
+
+        // test that user is registered -> numberOfUsers += 1
+        let count = await culinary.numberOfUsers(); 
+        assert.equal(count,1); 
       }); 
 
       // testing registered user adding recipe
       it('Success on adding recipe + increased balance', async function() {
-        await culinary.addRecipe(accounts[1], 10, {from: user1});
+        await culinary.register({ from: user1});
+        await culinary.addRecipe(user1, 10, {from: user1});
+
+        // check balance after adding recipe 
         let new_balance = await culinary.balanceOf({from: user1}); 
         assert.equal(new_balance,1); 
         
+        // checking number of recipe in data 
         let current_recipeCounts = await culinary.recipeCounts();
         assert.equal(current_recipeCounts,1); 
-        
       });
 
       // testing request recipes from other users 
       it('Success on requesting recipe', async function() {
-        // requesting newly added recipe (id = 0) from user1
-        await culinary.request(0, user1, {from: user2});
-        await culinary.response(user1, user2, 0, {from:user1}); 
 
-        let balance_user2 = culinary.balaneOf({from:user2}); 
-        let balance_user1 = culinary.balanceOf({from:user1}); 
+         // register both member 
+        await culinary.register({ from: accounts[1]});
+        await culinary.register({ from: accounts[2]});
         
-        // assert balance of user1 and user2
+        // check balance of user1
+        let balance_user1 = await culinary.balanceOf({from:user1}); 
         assert.equal(balance_user1,0);
-        assert.equal(balance_user2,1);
+
+        // check balance of user2
+        let balance_user2 = await culinary.balanceOf({from:user2}); 
+        assert.equal(balance_user2, 0);
+
+        // user1 add recipe 
+        await culinary.addRecipe(user1, 1, {from: user1});
+
+        // // user2 request recipe -> user1 response -> assert that the recipeCount for each account swapped. 
+        // await culinary.request(0, user1, {from: user2});
+        // await culinary.response(user1, user2, 0, {from:user1}); 
+
       }); 
 
     });

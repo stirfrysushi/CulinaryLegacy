@@ -10,6 +10,7 @@ contract CulinaryLegacyRecipe {
     }
 
     uint256 public recipeCounts; //increment id for recipe
+    uint256 public numberOfUsers; 
 
     address public contract_owner;
     mapping(address => uint256) public registeredUser; //keeping track registered user (address => 0/1)
@@ -52,7 +53,7 @@ contract CulinaryLegacyRecipe {
 
     function register() public payable {
         registeredUser[msg.sender] = 1;
-        //todo: emit event
+        numberOfUsers++; 
         emit _register(msg.sender, "register successfully");
     }
 

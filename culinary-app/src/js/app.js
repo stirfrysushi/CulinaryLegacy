@@ -2,7 +2,7 @@ App = {
   web3: null,
   contracts: {},
   url:'http://127.0.0.1:7545',
-  network_id:5777,
+  network_id:5,
   supervisor:null,
   current_account:null,
   value:1000000000000000000,

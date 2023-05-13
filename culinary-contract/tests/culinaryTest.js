@@ -16,7 +16,7 @@ contract('Culinary', function (accounts) {
     });
 
     // test for first deployed contract
-    describe('Initialization', async ()=>{
+    describe('Initialization', async () =>{
       it('Success on initialization to new deployed contract.', async function () {
         // testing state variable of contract 
         let count = await culinary.recipeCounts();
@@ -45,6 +45,10 @@ contract('Culinary', function (accounts) {
         await culinary.addRecipe(accounts[1], 10, {from: user1});
         let new_balance = await culinary.balanceOf({from: user1}); 
         assert.equal(new_balance,1); 
+        
+        let current_recipeCounts = await culinary.recipeCounts();
+        assert.equal(current_recipeCounts,1); 
+        
       });
 
       // testing request recipes from other users 
@@ -59,7 +63,6 @@ contract('Culinary', function (accounts) {
         // assert balance of user1 and user2
         assert.equal(balance_user1,0);
         assert.equal(balance_user2,1);
-
       }); 
 
     });

@@ -4,7 +4,8 @@ const truffleAssert = require('truffle-assertions');
 
 contract('Culinary', function (accounts) {
     let culinary
-    let contractOwner = accounts[0]
+    let success = '0x01'
+    let contractOwner = accounts[0];
     let user1 = accounts[1]; 
     let user2 = accounts[2];
     
@@ -44,6 +45,7 @@ contract('Culinary', function (accounts) {
 
       // testing registered user adding recipe
       it('Success on adding recipe + increased balance', async function() {
+
         await culinary.register({ from: user1});
         await culinary.addRecipe(user1, 10, {from: user1});
 
@@ -57,7 +59,7 @@ contract('Culinary', function (accounts) {
       });
 
       // testing request recipes from other users 
-      it('Success on requesting recipe', async function() {
+      it('Success on requesting and responding recipe', async function() {
 
          // register both member 
         await culinary.register({ from: accounts[1]});
@@ -72,12 +74,23 @@ contract('Culinary', function (accounts) {
         assert.equal(balance_user2, 0);
 
         // user1 add recipe 
-        await culinary.addRecipe(user1, 1, {from: user1});
+        await culinary.addRecipe(user1, 0, {from: user1}); 
 
-        // // user2 request recipe -> user1 response -> assert that the recipeCount for each account swapped. 
-        // await culinary.request(0, user1, {from: user2});
-        // await culinary.response(user1, user2, 0, {from:user1}); 
+        // check number of recipe in data 
+        let current_recipeCount = await culinary.recipeCounts(); 
+        assert.equal(current_recipeCount, 1); 
 
+        // check that user1 has 1 recipe stored 
+        let recipesOwned = await culinary.ownedRecipesCount(user1); 
+        assert.equal(recipesOwned,1); 
+
+        // user2 request recipe -> assert that it is successful
+        let result = await culinary.request(0, user1, {from: user2});
+        assert.equal(result.receipt.status, success); 
+
+        // user1 response -> assert that it is successful 
+        let result1 = await culinary.response(user2, user1, 0, {from:user1}); 
+        assert.equal(result1.receipt.status, success);
       }); 
 
     });

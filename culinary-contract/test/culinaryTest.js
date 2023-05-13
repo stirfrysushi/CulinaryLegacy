@@ -34,7 +34,7 @@ contract('Culinary', function (accounts) {
       it('Success on registering users', async function() {
 
         // testing balance after registered 
-        await culinary.register({ from: accounts[1]});
+        await culinary.register({ from: user1});
         let balance = await culinary.balanceOf({from: user1}); 
         assert.equal(balance, 0); 
 
@@ -62,8 +62,8 @@ contract('Culinary', function (accounts) {
       it('Success on requesting and responding recipe', async function() {
 
          // register both member 
-        await culinary.register({ from: accounts[1]});
-        await culinary.register({ from: accounts[2]});
+        await culinary.register({ from: user1});
+        await culinary.register({ from: user2});
         
         // check balance of user1
         let balance_user1 = await culinary.balanceOf({from:user1}); 
@@ -91,6 +91,7 @@ contract('Culinary', function (accounts) {
         // user1 response -> assert that it is successful 
         let result1 = await culinary.response(user2, user1, 0, {from:user1}); 
         assert.equal(result1.receipt.status, success);
+
       }); 
 
     });

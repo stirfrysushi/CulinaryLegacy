@@ -1,4 +1,4 @@
-const Culinary = artifacts.require('../contracts/Culinary.sol')
+const Culinary = artifacts.require('../contracts/CulinaryLegacyRecipe.sol')
 const truffleAssert = require('truffle-assertions');
 
 

@@ -97,4 +97,5 @@ contract('Culinary', function (accounts) {
     });
 })
 
-// REMEMBER -> npm i THEN -> truffle test
+// REMEMBER -> npm i 
+// THEN     -> truffle test

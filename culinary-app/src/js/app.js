@@ -81,13 +81,14 @@ App = {
     
   } ,
 
-  addRecipe:function(owner, price){
+  addRecipe: async function(owner, price){
     if(owner==='' || price===''){
       alert('Please enter all values');
       return false;
     }
-    //var option = {from: ethereum.request({method: 'eth_accounts'})};
-    var option={from:App.contract_owner} //might be the reason why only contract owner able to add recipe?
+    App.current_account = await ethereum.request({method: 'eth_accounts'});
+    var option = {from: App.current_account[0]};
+   // var option={from:App.contract_owner} //might be the reason why only contract owner able to add recipe?
     App.contracts.CulinaryLegacyRecipe.methods.addRecipe(owner, price)
     .send(option).on('transactionHash', function(hash){
     console.log(hash);
@@ -107,7 +108,7 @@ App = {
         .call()
         .then((r)=>{
           App.contracts.CulinaryLegacyRecipe.methods.ownerOf(r.recipeID).call().then((result)=>{
-            
+              console.log(r)
               var card='<div class="col-lg-3"><div class="card">'+
               '<div class="card-body">'+
               '<h6 class="card-title">Recipe # '+r.recipeID+'</h6>'+
